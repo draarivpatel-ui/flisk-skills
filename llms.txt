@@ -1,6 +1,6 @@
 # Flisk Skills
 
-> Portable Agent Skills (`SKILL.md`) and `AGENTS.md` rule templates for working with the Flisk CLI: a local-only, Docker + Tilt development tool. Not a deployment tool; do not invent Kubernetes or Docker Compose for Flisk projects.
+> Portable Agent Skills (`SKILL.md`) and `AGENTS.md` rule templates for working with the Flisk CLI: a local-only development tool: plain processes with `--local` (no Docker), or Docker + Tilt for container stacks. Not a deployment tool; do not invent Kubernetes or Docker Compose for Flisk projects.
 
 Run `flisk doctor`, then `flisk up`, from the project root. One maintained copy of each skill lives under `skills/`; the Claude plugin and `.agents/skills/` are symlinks to it.
 
