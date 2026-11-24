@@ -22,3 +22,18 @@ test('deduplicates links that appear more than once', () => {
   const markdown = 'https://a.example/ and [again](https://a.example/)';
   assert.deepEqual(extractLinks(markdown), ['https://a.example/']);
 });
+
+test('keeps balanced parentheses in URLs without consuming Markdown link delimiters', () => {
+  const markdown = [
+    '[Guide](https://example.com/wiki/Overview_(software_(local))).',
+    '[![Badge](https://example.com/badge_(test))](https://example.com/docs_(current))',
+    'See (https://example.com/about).',
+  ].join('\n');
+
+  assert.deepEqual(extractLinks(markdown), [
+    'https://example.com/about',
+    'https://example.com/badge_(test)',
+    'https://example.com/docs_(current)',
+    'https://example.com/wiki/Overview_(software_(local))',
+  ]);
+});

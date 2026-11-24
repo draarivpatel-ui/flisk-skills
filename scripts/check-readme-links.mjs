@@ -3,13 +3,27 @@ import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const defaultReadme = fileURLToPath(new URL('../README.md', import.meta.url));
-const linkPattern = /https?:\/\/[^\s<>"'`)]+/g;
 const timeoutMs = 20_000;
 
 export function extractLinks(markdown) {
   const links = new Set();
-  for (const match of markdown.matchAll(linkPattern)) {
-    links.add(match[0].replace(/[.,;:]+$/, ''));
+  const scheme = /https?:\/\//g;
+  const delimiter = /[\s<>"'`]/;
+  for (let match; (match = scheme.exec(markdown));) {
+    const start = scheme.lastIndex;
+    let end = start;
+    let depth = 0;
+    // A closing parenthesis ends the destination only if it has no matching opener in the URL.
+    for (; end < markdown.length && !delimiter.test(markdown[end]); end++) {
+      const char = markdown[end];
+      if (char === '(') depth++;
+      if (char === ')') {
+        if (depth === 0) break;
+        depth--;
+      }
+    }
+    if (end > start) links.add(markdown.slice(match.index, end).replace(/[.,;:]+$/, ''));
+    scheme.lastIndex = end;
   }
   return [...links].sort();
 }
